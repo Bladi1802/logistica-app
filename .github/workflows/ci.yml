@@ -1,5 +1,7 @@
-name: CI - Validación Expo App
+# Nombre del workflow que aparecerá en la pestaña Actions de GitHub
+name: CI - Validación Expo App Logística
 
+# Eventos que disparan el pipeline
 on:
   push:
     branches:
@@ -11,25 +13,42 @@ on:
       - main
       - develop
 
+# Jobs que ejecutará el workflow
 jobs:
   validate:
+    name: Instalar, revisar lint y validar TypeScript
+
+    # Runner donde se ejecutará el job
     runs-on: ubuntu-latest
 
     steps:
+      # Descarga el código del repositorio dentro del runner
       - name: Descargar repositorio
         uses: actions/checkout@v4
 
+      # Instala Node.js en la versión definida para el proyecto
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
+      # Instala dependencias usando package-lock.json
       - name: Instalar dependencias
         run: npm ci
 
+      # Ejecuta revisión de estilo y errores con ESLint
       - name: Ejecutar lint
         run: npm run lint
 
+      # Verifica errores de TypeScript sin generar archivos
       - name: Verificar TypeScript
         run: npx tsc --noEmit
+
+      # Espacio preparado para pruebas futuras
+      # - name: Ejecutar pruebas
+      #   run: npm test
+
+      # Espacio preparado para build futuro con Expo/EAS
+      # - name: Build futuro
+      #   run: npx expo export
